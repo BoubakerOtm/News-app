@@ -5,6 +5,7 @@ object Constants {
     const val TOP_HEADLINES_ENDPOINT = "top-headlines"
     const val EVERYTHING_ENDPOINT = "everything"
     const val SOURCES_ENDPOINT = "sources"
+    const val SEARCH_ENDPOINT = "everything"
 
     const val API_KEY_PARAM = "apiKey"
 
@@ -23,7 +24,7 @@ object Constants {
 
     const val LANGUAGE_PARAM = "language"
 
-    const val DEFAULT_PAGE_SIZE = 20
+    const val DEFAULT_PAGE_SIZE = 100
 
     const val DEFAULT_COUNTRY = "us"
     const val DEFAULT_CATEGORY = "general"

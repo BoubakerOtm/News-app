@@ -3,14 +3,17 @@ package com.example.newsapp.home.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsapp.app.network.Resource
+import com.example.newsapp.home.data.Article
 import com.example.newsapp.home.data.NewsResponse
 import com.example.newsapp.home.domain.HomeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -22,6 +25,12 @@ data class HomeUiState(
     val error: String? = null,
 )
 
+sealed class UiEvent {
+    data object Idle : UiEvent()
+    data class UiArticleClick(val article: Article) : UiEvent()
+    data object UiBackClick : UiEvent()
+}
+
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val homeRepository: HomeRepository,
@@ -32,10 +41,30 @@ class HomeViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = HomeUiState(isLoading = true),
     )
+    private val _event: Channel<UiEvent> = Channel()
+    val event = _event.receiveAsFlow()
+
+    fun onEvent(event: UiEvent) {
+        when (event) {
+            is UiEvent.UiArticleClick -> {
+                viewModelScope.launch {
+                    _event.send(
+                        UiEvent.UiArticleClick(event.article),
+                    )
+                }
+            }
+
+            is UiEvent.UiBackClick -> {
+            }
+
+            else -> Unit
+        }
+
+    }
 
     fun initUi() {
         viewModelScope.launch {
-            homeRepository.getTopHeadlines().collectLatest {resource ->
+            homeRepository.getTopHeadlines().collectLatest { resource ->
                 when (resource) {
                     is Resource.Success<*> -> {
                         _uiState.update {

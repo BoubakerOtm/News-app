@@ -33,12 +33,3 @@ class MainActivity : ComponentActivity() {
 
 }
 
-@Composable
-fun NewsUiScreen(modifier: Modifier) {
-    Column(modifier = modifier
-
-    ) {
-        Text(text = "NewsUiScreen")
-
-    }
-}

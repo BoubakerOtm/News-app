@@ -2,6 +2,7 @@ package com.example.newsapp.app
 
 import com.example.newsapp.app.network.NewsApi
 import com.example.newsapp.home.domain.HomeRepository
+import com.example.newsapp.search.domain.SearchRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,4 +32,16 @@ object AppModule {
             newsApi = newsApi,
         )
     }
+
+    @Provides
+    @Singleton
+    fun provideSearchRepository(
+        newsApi: NewsApi,
+    ): SearchRepository {
+        return SearchRepository(
+            newsApi = newsApi,
+        )
+    }
+
+
 }
