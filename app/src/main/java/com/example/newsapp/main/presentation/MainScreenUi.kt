@@ -1,12 +1,11 @@
 package com.example.newsapp.main.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -19,26 +18,28 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
-import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
+import com.example.newsapp.R
 import com.example.newsapp.app.navigation.BottomBarScreen
 import com.example.newsapp.app.navigation.BottomBarScreenSaver
-import com.example.newsapp.app.navigation.Screens
 import com.example.newsapp.app.navigation.bottomBarItems
 import com.example.newsapp.home.data.Article
-import com.example.newsapp.home.presentation.HomeScreenUi
+import com.example.newsapp.home.data.CardNews
+import com.example.newsapp.home.presentation.HomeScreenRoute
 import com.example.newsapp.home.presentation.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreenUi(modifier: Modifier = Modifier, navigateToDetails: (article: Article) -> Unit , navigateToSearch: () -> Unit) {
+fun MainScreenUi(
+    modifier: Modifier = Modifier,
+    navigateToDetails: (article: CardNews) -> Unit,
+    navigateToSearch: () -> Unit
+) {
     val backStack = rememberNavBackStack(BottomBarScreen.Home)
 
     var currentBottomBarScreen: BottomBarScreen by rememberSaveable(
@@ -46,14 +47,17 @@ fun MainScreenUi(modifier: Modifier = Modifier, navigateToDetails: (article: Art
     ) { mutableStateOf(BottomBarScreen.Home) }
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier
+            .background(
+                color = MaterialTheme.colorScheme.background,
+            ),
         topBar = {
             TopAppBar(
                 title = { Text("News App") },
                 actions = {
-                    IconButton(onClick = navigateToSearch ) {
+                    IconButton(onClick = navigateToSearch) {
                         Icon(
-                           Icons.Filled.Search,
+                            painter = painterResource(R.drawable.ic_search),
                             contentDescription = "Search",
                         )
                     }
@@ -62,16 +66,18 @@ fun MainScreenUi(modifier: Modifier = Modifier, navigateToDetails: (article: Art
         },
         bottomBar = {
             NavigationBar(
-                modifier = Modifier,
-                containerColor = Color.White,
-
+                containerColor = MaterialTheme.colorScheme.surface,
             ) {
                 bottomBarItems.forEach { destination ->
                     NavigationBarItem(
                         selected = currentBottomBarScreen == destination,
                         icon = {
-                            Icon(destination.icon, contentDescription = destination.title)
+                            Icon(
+                                painter = painterResource(destination.icon),
+                                contentDescription = destination.title
+                            )
                         },
+                        label = { Text(destination.title) },
                         onClick = {
                             if (backStack.lastOrNull() != destination) {
                                 if (backStack.lastOrNull() in bottomBarItems) {
@@ -86,20 +92,18 @@ fun MainScreenUi(modifier: Modifier = Modifier, navigateToDetails: (article: Art
             }
 
         },
-        ) { innerPadding ->
+    ) { innerPadding ->
         NavDisplay(
             modifier = Modifier.padding(innerPadding),
             backStack = backStack,
             onBack = { backStack.removeLastOrNull() },
             entryDecorators = listOf(
-                rememberSceneSetupNavEntryDecorator(),
-                rememberSavedStateNavEntryDecorator(),
+                rememberSaveableStateHolderNavEntryDecorator(),
 //                rememberViewModelStoreNavEntryDecorator(),
             ),
             entryProvider = entryProvider {
                 entry<BottomBarScreen.Home> {
-                    val homeViewModel = hiltViewModel<HomeViewModel>()
-                    HomeScreenUi(homeViewModel, modifier) {
+                    HomeScreenRoute(modifier = modifier) {
                         navigateToDetails(it)
                     }
 

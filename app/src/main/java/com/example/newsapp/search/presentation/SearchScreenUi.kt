@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Clear
+
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -24,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import com.example.newsapp.home.data.Article
+import com.example.newsapp.home.data.CardNews
 import com.example.newsapp.home.presentation.ArticleRow
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,7 +30,7 @@ import com.example.newsapp.home.presentation.ArticleRow
 fun SearchScreenUi(
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel,
-    navigateToDetails: (article: Article) -> Boolean,
+    navigateToDetails: (article: CardNews) -> Boolean,
     navigateToMain: () -> NavKey?,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -40,9 +39,9 @@ fun SearchScreenUi(
     LaunchedEffect(event) {
         when (event) {
             is UiEvent.Select -> {
-                navigateToDetails(
-                    (event as UiEvent.Select).article,
-                )
+//                navigateToDetails(
+////                    (event as UiEvent.Select).article,
+//                )
             }
 
             is UiEvent.Back -> {
@@ -65,12 +64,12 @@ fun SearchScreenUi(
             placeholder = { Text("Search") },
             leadingIcon = {
                 IconButton(onClick = { viewModel.onEvent(UiEvent.Back) }) {
-                    Icon(Icons.Filled.ArrowBack, contentDescription = null)
+//                    Icon(Icons.Filled.ArrowBack, contentDescription = null)
                 }
             },
             trailingIcon = {
                 IconButton(onClick = { viewModel.onEvent(UiEvent.Clear) }) {
-                    Icon(Icons.Filled.Clear, contentDescription = null)
+//                    Icon(Icons.Filled.Clear, contentDescription = null)
                 }
             },
             modifier = Modifier

@@ -2,10 +2,24 @@ package com.example.newsapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+// ---------- Brand Colors ----------
+val PrimaryColor = Color(0xFF1E2A5A)       // Deep Indigo (Trust / News)
+val SecondaryColor = Color(0xFF3949AB)     // Indigo Variant
+val AccentColor = Color(0xFFE53935)        // News Red (Breaking / CTA)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+// ---------- Light Theme ----------
+val BackgroundColor = Color(0xFFF8F9FB)    // Light Neutral
+val SurfaceColor = Color(0xFFFFFFFF)       // White
+
+val TextPrimary = Color(0xFF111827)        // Almost Black
+val TextSecondary = Color(0xFF6B7280)      // Gray
+
+// ---------- Dark Theme ----------
+val DarkBackground = Color(0xFF0F172A)     // Dark Navy
+val DarkSurface = Color(0xFF1E293B)        // Dark Card
+
+val DarkTextPrimary = Color(0xFFF9FAFB)    // White
+val DarkTextSecondary = Color(0xFFCBD5E1)  // Muted Gray
+
+// ---------- Status ----------
+val ErrorColor = Color(0xFFD32F2F)          // Error Red

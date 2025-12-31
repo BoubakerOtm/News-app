@@ -8,10 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,11 +26,12 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil3.compose.AsyncImage
 import com.example.newsapp.home.data.Article
+import com.example.newsapp.home.data.CardNews
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsScreenUi(
-    article: Article,
+    article: CardNews,
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
 ) {
@@ -47,7 +45,7 @@ fun DetailsScreenUi(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+//                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                     }
 
                 },
@@ -61,25 +59,25 @@ fun DetailsScreenUi(
                 .verticalScroll(state),
         ) {
             AsyncImage(
-                model = article.urlToImage,
+                model = article.urlImage,
                 contentDescription = null,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = "Description")
-            Text(text = article.description ?: "")
+            Text(text = article.description)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Content")
-            Text(text = article.content ?: "")
+//            Text(text = "Content")
+//            Text(text = article.content ?: "")
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = "Author")
-            Text(text = article.author ?: "")
+            Text(text = article.caption)
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = "Published At")
-            Text(text = article.publishedAt)
+            Text(text = article.date)
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = "Source")
             Spacer(modifier = Modifier.height(8.dp))
-            ArticleLink(url = article.url)
+            ArticleLink(url = article.id)
         }
     }
 }

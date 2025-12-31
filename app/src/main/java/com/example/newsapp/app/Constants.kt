@@ -33,6 +33,4 @@ object Constants {
 
     const val DEFAULT_PAGE = 1
 
-
-    const val API_KEY = "df0eb202fab3484dbb00b6f7acd49944"
 }

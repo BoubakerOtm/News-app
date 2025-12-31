@@ -2,33 +2,64 @@ package com.example.newsapp.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.newsapp.R
 
-// Set of Material typography styles to start with
+val Inters = FontFamily(
+    Font(R.font.inter, FontWeight.Normal),
+    Font(R.font.inter_medium, FontWeight.Medium),
+    Font(R.font.inter_bold, FontWeight.Bold),
+    Font(R.font.inter_semibold, FontWeight.SemiBold),
+)
+
+// Define typography styles
 val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    )
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
+    //App Title
+    headlineLarge = TextStyle(
+        fontFamily = Inters,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 22.sp,
         lineHeight = 28.sp,
-        letterSpacing = 0.sp
     ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
+
+    // Article Title
+    titleMedium = TextStyle(
+        fontFamily = Inters,
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        lineHeight = 26.sp,
+    ),
+    // Card Title
+    titleSmall = TextStyle(
+        fontFamily = Inters,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+    ),
+
+    // Body Text
+    bodyMedium = TextStyle(
+        fontFamily = Inters,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        lineHeight = 22.sp,
+    ),
+    // Caption
+    bodySmall = TextStyle(
+        fontFamily = Inters,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp,
+        lineHeight = 18.sp,
+    ),
+
+    // Badge / Meta
+    labelMedium = TextStyle(
+        fontFamily = Inters,
         fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
+        fontSize = 12.sp,
         lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
-    */
+    ),
 )

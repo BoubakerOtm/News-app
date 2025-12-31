@@ -6,4 +6,5 @@ plugins {
     alias(libs.plugins.kotlin.kapt) apply false
     alias(libs.plugins.jetbrains.kotlin.serialization) apply false
     alias(libs.plugins.hilt.android) apply false
+    alias(libs.plugins.ksp) apply false
 }

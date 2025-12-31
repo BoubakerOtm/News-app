@@ -1,37 +1,31 @@
 package com.example.newsapp.app.navigation
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Star
+
 import androidx.compose.runtime.saveable.Saver
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation3.runtime.NavKey
-import kotlinx.serialization.Contextual
+import com.example.newsapp.R
 import kotlinx.serialization.Serializable
 
 val bottomBarItems = listOf(
     BottomBarScreen.Home,
-//    BottomBarScreen.Search,
     BottomBarScreen.Saved
 )
 
 @Serializable
 sealed class BottomBarScreen(
-    @Contextual val icon: ImageVector,
+    val icon: Int,
     val title: String,
-): NavKey {
+) : NavKey {
     @Serializable
     data object Home : BottomBarScreen(
-        icon = Icons.Default.Home,
+        icon = R.drawable.ic_home,
         title = "Home"
     )
 
 
-
     @Serializable
     data object Saved : BottomBarScreen(
-        icon = Icons.Default.Star,
+        icon = R.drawable.ic_bookmark,
         title = "Saved"
     )
 }
