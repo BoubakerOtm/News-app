@@ -8,6 +8,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -17,9 +18,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
@@ -28,10 +29,8 @@ import com.example.newsapp.R
 import com.example.newsapp.app.navigation.BottomBarScreen
 import com.example.newsapp.app.navigation.BottomBarScreenSaver
 import com.example.newsapp.app.navigation.bottomBarItems
-import com.example.newsapp.home.data.Article
 import com.example.newsapp.home.data.CardNews
 import com.example.newsapp.home.presentation.HomeScreenRoute
-import com.example.newsapp.home.presentation.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,6 +61,11 @@ fun MainScreenUi(
                         )
                     }
                 },
+                modifier = Modifier
+                    .background(
+                        color = MaterialTheme.colorScheme.surface,
+                    )
+                    .shadow(elevation = 2.dp),
             )
         },
         bottomBar = {
@@ -87,6 +91,12 @@ fun MainScreenUi(
                                 currentBottomBarScreen = destination
                             }
                         },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
+                        )
+
+
                     )
                 }
             }

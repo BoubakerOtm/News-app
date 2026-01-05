@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface HomeRepository {
     fun getTopHeadlines(
-        category: String?
+        category: String
     ): Flow<PagingData<CardNews>>
 }

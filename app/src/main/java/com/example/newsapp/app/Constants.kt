@@ -11,6 +11,8 @@ object Constants {
 
     const val COUNTRY_PARAM = "country"
     const val CATEGORY_PARAM = "category"
+    const val TECHNOLOGY = "technology"
+    const val GENERAL = "general"
     const val QUERY_PARAM = "q"
 
     const val PAGE_SIZE_PARAM = "pageSize"

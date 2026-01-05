@@ -18,7 +18,7 @@ class HomeRepositoryImpl @Inject constructor(
 ) : HomeRepository {
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun getTopHeadlines(category: String?) =
+    override fun getTopHeadlines(category: String) =
         Pager(
             config = PagingConfig(
                 pageSize = 10,
@@ -28,6 +28,7 @@ class HomeRepositoryImpl @Inject constructor(
             remoteMediator = TopHeadlinesRemoteMediator(
                 api = api,
                 db = db,
+                category = category,
             ),
             pagingSourceFactory = {
                 db.articleDao().pagingSource()

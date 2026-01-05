@@ -107,4 +107,7 @@ dependencies {
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
 
+    //Materiel
+//    implementation("androidx.compose.material:material:1.6.0+")
+
 }

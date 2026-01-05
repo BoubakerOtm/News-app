@@ -3,7 +3,6 @@ package com.example.newsapp.home.data
 import android.util.Log
 import androidx.paging.*
 import androidx.room.withTransaction
-import com.example.newsapp.BuildConfig
 import com.example.newsapp.app.network.NewsApi
 import com.example.newsapp.app.persistance.NewsDatabase
 import com.example.newsapp.app.persistance.model.ArticleEntity
@@ -14,6 +13,7 @@ import com.example.newsapp.app.persistance.model.toEntity
 class TopHeadlinesRemoteMediator(
     private val api: NewsApi,
     private val db: NewsDatabase,
+    private val category: String,
 ) : RemoteMediator<Int, ArticleEntity>() {
 
 
@@ -51,6 +51,7 @@ class TopHeadlinesRemoteMediator(
             val response = api.getTopHeadlines(
                 page = page,
                 pageSize = state.config.pageSize,
+                category = category
             )
 
             val endOfPaginationReached = response.articles.isEmpty()

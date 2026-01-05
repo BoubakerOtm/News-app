@@ -15,17 +15,20 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.ItemSnapshotList
 import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
@@ -33,6 +36,7 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.example.newsapp.home.data.Article
 import com.example.newsapp.home.data.CardNews
+import com.example.newsapp.ui.theme.NewsAppTheme
 
 @Composable
 fun HomeScreenRoute(
@@ -46,44 +50,114 @@ fun HomeScreenRoute(
     val imageRequest = remember {
         ImageRequest.Builder(context)
     }
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-    ) {
-        items(
-            count = articles.itemCount,
-            key = articles.itemKey { it.id }
-        ) { index ->
-            val article = articles[index]
-            if (article == null) {
-                Column {
-                    repeat(5) {
-                        NewsCardSkeleton()
-                    }
-                }
-            } else {
-                NewsCard(
-                    cardNews = article,
-                    onCardClick = { onButtonClick(article) },
-                    imageRequest = imageRequest.data(article.urlImage)
+    HomeScreenUi(
+        modifier = modifier,
+        onEvent = homeViewModel::onEvent,
+        uiState = uiState,
+        contentList = {
+            ContentList(
+                modifier = modifier,
+                articles = articles,
+                onButtonClick = onButtonClick,
+                imageRequest = { urlImage ->
+                    imageRequest.data(urlImage)
                         .crossfade(true)
                         .build()
-                )
-            }
+                },
+            )
         }
+    )
+}
 
-        if (articles.loadState.append is LoadState.Loading) {
-            item {
-                NewsCardSkeleton()
+@Composable
+fun ContentList(
+    modifier: Modifier = Modifier,
+    articles: LazyPagingItems<CardNews>,
+    onButtonClick: (article: CardNews) -> Unit,
+    imageRequest: (String) -> ImageRequest,
+) {
+    val isRefreshing by remember {
+        derivedStateOf { articles.loadState.refresh is LoadState.Loading && articles.itemCount > 0 }
+    }
+    PullToRefreshBox(
+        modifier = Modifier,
+        isRefreshing = isRefreshing,
+        onRefresh = articles::refresh
+    ) {
+        LazyColumn(
+            modifier = modifier.fillMaxSize(),
+        )
+        {
+/*            articles.loadState.apply {
+                when {
+                    // 1. REFRESH STATE: Initial load or pull-to-refresh is in progress
+                    refresh is LoadState.Loading -> {
+                        item {
+                            // Show shimmer skeletons during initial load
+                            repeat(5) {
+                                NewsCardSkeleton()
+                            }
+                        }
+                    }
+
+                    // 2. REFRESH ERROR: Initial load or refresh failed
+                    refresh is LoadState.Error -> {
+                        val e = articles.loadState.refresh as LoadState.Error
+                        item {
+                            ErrorView(
+                                errorMessage = "Failed to load articles: ${e.error.localizedMessage}",
+                                modifier = Modifier.clickable { articles.retry() }
+                            )
+                        }
+                    }
+
+                    // 4. APPEND ERROR: Loading the next page failed
+                    append is LoadState.Error -> {
+                        val e = articles.loadState.append as LoadState.Error
+                        item {
+                            ErrorView(
+                                errorMessage = "Failed to load more articles: ${e.error.localizedMessage}",
+                                modifier = Modifier.clickable { articles.retry() }
+                            )
+                        }
+                    }
+                }
+            }*/
+            items(
+                count = articles.itemCount,
+                key = articles.itemKey { it.id }
+            ) { index ->
+                val article = articles[index]
+                article?.let {
+                    NewsCard(
+                        cardNews = it,
+                        onCardClick = { onButtonClick(article) },
+                        imageRequest = imageRequest(article.urlImage)
+                    )
+                }
+            }
+
+            if (articles.loadState.refresh is LoadState.NotLoading && articles.itemCount == 0) {
+                item {
+                    EmptyStateView(message = "No articles found.")
+                }
             }
         }
     }
-//    HomeScreenUi(
-//        modifier = modifier,
-//        onEvent = homeViewModel::onEvent,
-//        uiState = uiState,
-//        articles = articles.itemSnapshotList
-//    )
 
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenUiPreview(modifier: Modifier = Modifier) {
+    NewsAppTheme {
+        HomeScreenUi(
+            modifier = modifier,
+            onEvent = {},
+            uiState = HomeUiState(),
+            contentList = {}
+        )
+    }
 
 }
 
@@ -91,39 +165,18 @@ fun HomeScreenRoute(
 fun HomeScreenUi(
     modifier: Modifier,
     onEvent: (UiEvent) -> Unit,
-    articles: ItemSnapshotList<CardNews>,
-    uiState: HomeUiState
+    uiState: HomeUiState,
+    contentList: @Composable () -> Unit,
 ) {
-    Surface(
+
+    Column(
         modifier = modifier.fillMaxSize(),
-    )
-    {
-        // Select Category
-        if (uiState.isLoading) {
-            LoadingIndicator()
-        } else if (uiState.error != null) {
-            ErrorView(errorMessage = uiState.error)
-        } else {
-            val articles = uiState.newsResponse?.articles ?: emptyList()
-            if (articles.isEmpty()) { // Handle empty state
-                EmptyStateView(message = "No news articles found.")
-            } else {
-//                LazyColumn(modifier = Modifier.fillMaxSize()) {
-//                    items(
-//                        items = articles,
-//                        key = { article -> article.title },
-//                    ) { article ->
-//                        ArticleRow(
-//                            article = article,
-//                            onArticleClick = { onEvent(UiEvent.UiArticleClick(article)) },
-//                        )
-//                        if (articles.indexOf(article) < articles.lastIndex) {
-//                            Divider(color = Color.LightGray, thickness = 1.dp)
-//                        }
-//                    }
-//                }
-            }
-        }
+    ) {
+        CategoryItemFilterRow(
+            selected = uiState.selectedCategory,
+            onSelect = { onEvent(UiEvent.CategorySelected(it)) },
+        )
+        contentList()
     }
 }
 
